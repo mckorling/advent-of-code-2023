@@ -1,38 +1,3 @@
-# test_values = [
-#     "seeds: 79 14 55 13",
-#     "",
-#     "seed-to-soil map:",
-#     "50 98 2",       # 79 = 79
-#     "52 50 48",       # 79 = 81
-#     "",
-#     "soil-to-fertilizer map:",
-#     "0 15 37",       # 79 = 79, 81 = 81
-#     "37 52 2",      # 79 = 79, 81 = 81
-#     "39 0 15",      # 79 = 79, 81 = 81
-#     "", #14, 53
-#     "fertilizer-to-water map:",
-#     "49 53 8",  # 79 = 79, 81 = 81
-#     "0 11 42",  # 79 = 79, 81 = 81
-#     "42 0 7",   # 79 = 79, 81 = 81
-#     "57 7 4",   # 79 = 79, 81 = 81
-#     "", #14, 49, 3, 42, 53
-#     "water-to-light map:",
-#     "88 18 7",  # 79 = 79, 81 = 81
-#     "18 25 70", # 79 = 72, 81 = 74
-#     "", #14, 3, 42, 49, 53, 35, 46
-#     "light-to-temperature map:",
-#     "45 77 23", # 72 = 72, 74 = 74, 79 = 47, 81 = 49
-#     "81 45 19", # 72, 74, 79, 81
-#     "68 64 13", # 72, 74 = 78, 79 = 83, 81 = 85
-#     "", #14, 3, 42, 49, 35, 89, 82
-#     "temperature-to-humidity map:",
-#     "0 69 1",   # 47, 49, 72, 74, 79, 81, 83, 85
-#     "1 0 69",   # 47 = 48, 49 = 50, 72, 74, 79, 81, 83, 85
-#     "", #14, 
-#     "humidity-to-location map:",
-#     "60 56 37", # 48 = 52, 50 = 54, 72 = 76, 74 = 78, 79 = 83, 81 = 85, 83 = 87, 85 = 89
-#     "56 93 4"
-# ]
 test_values = [
     [79, 14, 55, 13],
     [
@@ -111,23 +76,11 @@ def convert_file(file_string):
 
     return values
             
-# helper function
-# destination, source, range
-# if input number is within source + range
-# then return the input + (source - destination)
-def conversion(value, destination, source, range):
-    difference = destination - source
-    if source <= value <= source + range:
-        value += difference
-    return value
 
-# track a set for each map that tracks numbers that have been processed
-# if a number is in the set, break
-# otherwise, keep looping and calculating, then add it to set
-# loop through each seed
-# loop through each map
-# loop through each interval, run helper function
-# track the minimum returned by the last map
+# there are 4 seed values.
+# use the maps in index 1 to the end to see which interval the current value
+# fits in. convert it (see if statement) and use that value in the next map
+# returns the lowest number from all converted seeds
 data = convert_file(file)
 def calculate_lowest_local_num(data):
     seeds = data[0]
@@ -156,12 +109,4 @@ def calculate_lowest_local_num(data):
 # print(calculate_lowest_local_num(data)) # 535088217
 # print(calculate_lowest_local_num(test_values)) # 35
 
-
-# local_num = s
-#         for i in range(1, len(data)):
-#             values = data[i].split(" ")
-#             dest = int(values[0])
-#             source = int(values[1])
-#             r = int(values[2])
-#             local_num = conversion(local_num, dest, source, r)
-#         lowest_local = min(lowest_local, local_num)
+#----------------------PART 2-----------------------------------------
