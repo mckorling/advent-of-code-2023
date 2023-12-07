@@ -21,15 +21,6 @@ test_dists = [9, 40, 200]
 # which means the distance traveled is 6mm (not 7mm, because for 1ms, you are holding the button)
 # hold for 3ms, means can travel for 4ms at 3mm / ms, so it is 12mm
 
-# create list, track how many ways a distance can be broken per time
-# loop from 1 to end of time, t, not inclusive. 
-# track total of how many record distances can be travelled
-# track the last processed dist, set at 0
-# not holding the button or holding it the whole time means no distance is traveled
-# calculate the distance travelled
-# if it is greater than current record, increment total
-# and update last processed dist
-# elif it isn't greater, and the curr number is less than last processed, break (?)
 def calculate_dist(times, dists):
     total_wins_by_dist = [0] * len(times)
     for i in range(len(times)):
@@ -63,11 +54,14 @@ def calculate_dist(times, dists):
 # new input data
 # Time:        46     82     84     79
 # Distance:   347   1522   1406   1471
+
 file2 = open("/Users/megankorling/Developer/advent-of-code-23/day-6/data2.txt", "r")
 lines2 = []
 for line in file2:
     lines2.append(line.strip())
 time_line2 = lines2[0].split(":")[1].split(" ")
+
+# too lazy to put this in it's own function
 times2 = ""
 for c in time_line2:
     if c.isdigit():
@@ -79,7 +73,7 @@ for c in dists_line2:
     if c.isdigit():
         dists2 += c
 dists2 = [int(dists2)]
-print(dists2)
+
 # print(calculate_dist(times2, dists2)) # 28360140
-# took a minute, maybe a little less to run
+# took a minute, maybe a little less, to run
 # there is probably some way to improve the speed, but the same algorithm does work
