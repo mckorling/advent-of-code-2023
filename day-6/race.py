@@ -59,9 +59,27 @@ def calculate_dist(times, dists):
 
 #---------------------------PART 2-----------------------------
 # instead of a list of times, they actually combine to make one number
+# so [7, 15, 30] becomes 71530
+# new input data
 # Time:        46     82     84     79
 # Distance:   347   1522   1406   1471
-
-print(calculate_dist([46828479], [347152214061471])) # 28360140
+file2 = open("/Users/megankorling/Developer/advent-of-code-23/day-6/data2.txt", "r")
+lines2 = []
+for line in file2:
+    lines2.append(line.strip())
+time_line2 = lines2[0].split(":")[1].split(" ")
+times2 = ""
+for c in time_line2:
+    if c.isdigit():
+        times2 += c
+times2 = [int(times2)]
+dists_line2 = lines2[1].split(":")[1].split(" ")
+dists2 = ""
+for c in dists_line2:
+    if c.isdigit():
+        dists2 += c
+dists2 = [int(dists2)]
+print(dists2)
+# print(calculate_dist(times2, dists2)) # 28360140
 # took a minute, maybe a little less to run
 # there is probably some way to improve the speed, but the same algorithm does work
