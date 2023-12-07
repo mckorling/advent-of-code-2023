@@ -110,3 +110,43 @@ def calculate_lowest_local_num(data):
 # print(calculate_lowest_local_num(test_values)) # 35
 
 #----------------------PART 2-----------------------------------------
+# instead of loop through seed numbers
+# now take the every two seed numbers: n1, n2
+# and calculate the seed number in the from n1 to n1 + n2 (not inclusive)
+# return the lowest overall
+
+# brute force will be nasty with the input data
+# some may overlap, so make a set and add all possible seeds in there?
+def calculate_lowest_local_num_by_range(data):
+    seeds = data[0]
+    range_set = set()
+    # brute force, times out
+    for i in range(0, len(seeds), 2):
+        # print(seeds[i])
+        for j in range(seeds[i+1]):
+            range_set.add(j + seeds[i])
+    lowest_local = float('inf')
+    # print(range_set)
+    for s in range_set:
+        # print(f"s: {s}")
+        curr_num = s
+        for i in range(1, len(data)):
+            for j in range(len(data[i])):
+                values = data[i][j].split(" ")
+                # print(values)
+                dest = int(values[0])
+                source = int(values[1])
+                r = int(values[2])
+                # mapped_val = conversion(curr_num, dest, source, r)
+                if source <= curr_num <= source + r:
+                    # print(values)
+                    curr_num += (dest - source)
+                    break
+
+        lowest_local = min(lowest_local, curr_num)
+        # print(f"s: {s}, lowest: {lowest_local}")
+    return lowest_local
+
+# print(calculate_lowest_local_num_by_range(test_values)) # 46
+print(calculate_lowest_local_num_by_range(data))
+# started running at 5:31
