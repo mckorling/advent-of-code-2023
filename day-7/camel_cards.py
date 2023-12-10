@@ -40,10 +40,12 @@ test_values = {
     "KTJJT": 220,
     "KK677": 28,
     "QQQJA": 483,
-    "33332": 100,
-    "2AAAA": 200,
-    "77888": 300,
-    "77788": 400
+    "QJJQ2": 100,
+    "QQQQ2": 200
+    # "33332": 100,
+    # "2AAAA": 200,
+    # "77888": 300,
+    # "77788": 400
 }
 
 # convert data to a dict
@@ -129,4 +131,108 @@ def process_hands(data_map):
 # print(process_hands(test_values)) # 6440
 
 data = convert_file("/Users/megankorling/Developer/advent-of-code-23/day-7/data.txt")
-print(process_hands(data)) # 250474325
+# print(process_hands(data)) # 250474325
+
+
+#---------------------------Part 2----------------------------------
+# Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.
+
+# To balance this, J cards are now the weakest individual cards, weaker even than 2. The other cards stay in the same order: A, K, Q, T, 9, 8, 7, 6, 5, 4, 3, 2, J.
+
+# J cards can pretend to be whatever card is best for the purpose of determining hand type; for example, QJJQ2 is now considered four of a kind. However, for the purpose of breaking ties between two hands of the same type, J is always treated as J, not the card it's pretending to be: JKKK2 is weaker than QQQQ2 because J is weaker than Q.
+
+# Now, the above example goes very differently:
+
+# 32T3K 765
+# T55J5 684
+# KK677 28
+# KTJJT 220
+# QQQJA 483
+# 32T3K is still the only one pair; it doesn't contain any jokers, so its strength doesn't increase.
+# KK677 is now the only two pair, making it the second-weakest hand.
+# T55J5, KTJJT, and QQQJA are now all four of a kind! T55J5 gets rank 3, QQQJA gets rank 4, and KTJJT gets rank 5.
+# With the new joker rule, the total winnings in this example are 5905.
+
+SORT_ORDER_TWO = "J23456789TQKA"
+
+def get_max_card_count(card_map):
+    max_count = 0
+    max_char = ''
+    for c in card_map:
+        if c == 'J':
+            continue
+        else:
+            if card_map[c] > max_count:
+                max_count = card_map[c]
+                max_char = c
+    if max_char:
+        return max_char
+    else:
+        return 'J'
+
+def is_two_pair_part_2(card_map):
+    j_count = card_map['J']
+    max_char = get_max_card_count(card_map)
+    card_map[max_char] += j_count
+    for c in card_map:
+        if c != 'J' and card_map[c] == 3:
+            # 3 of a kind
+            return False 
+    return True
+
+def is_full_house_part_2(card_map):
+    j_count = card_map['J']
+    max_char = get_max_card_count(card_map)
+    card_map[max_char] += j_count
+    # print(card_map)
+    for c in card_map:
+        if c != 'J' and card_map[c] == 4:
+            # 4 of a kind
+            return False
+    return True
+
+def get_hand_type_part_2(cards):
+    card_map = Counter(cards)
+    map_len = len(card_map)
+    if 'J' in card_map:
+        map_len -= 1
+    # print(f"{cards} {map_len}")
+    if map_len == 5:
+        return "high"
+    elif map_len == 4:
+        return "one-pair"
+    elif map_len == 3:
+        if is_two_pair_part_2(card_map):
+            return "two-pair"
+        return "three"
+    elif map_len == 2:
+        if is_full_house_part_2(card_map):
+            return "full"
+        return "four"
+    else:
+        return "five"
+
+# this would be easy to adapt to use for either scenario
+# just add a parameter, boolean, is_part_two, then only need to update:
+# hand_type variable and SORT_ORDER    
+def process_hands_part_2(data_map):
+    for hand in data_map:
+        hand_type = get_hand_type_part_2(hand)
+        card_hands_map[hand_type].append(hand)
+
+    for key, value in card_hands_map.items():
+        card_hands_map[key] = sorted(value, key=lambda word: [SORT_ORDER_TWO.index(c) for c in word])
+    total = 0
+    rank = 1
+    for hand_type in card_hands_map:
+        for hand in card_hands_map[hand_type]:
+            total += (rank * data_map[hand])
+            rank += 1
+
+    return total
+
+# print(process_hands_part_2(test_values)) # 5905
+
+print(process_hands_part_2(data)) # 248909434
+# first submission was too high: 249407075
+# it was because i didn't update all the function names to use '_part_2'
